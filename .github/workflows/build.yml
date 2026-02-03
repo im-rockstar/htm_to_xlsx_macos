@@ -1,0 +1,80 @@
+name: Build Executables
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install beautifulsoup4 openpyxl pyinstaller
+      
+      - name: Build Windows EXE
+        run: |
+          pyinstaller --onefile --console --name html_to_xlsx_windows html_to_xlsx.py
+      
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: html_to_xlsx-windows
+          path: dist/html_to_xlsx_windows.exe
+
+  build-macos-intel:
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install beautifulsoup4 openpyxl pyinstaller
+      
+      - name: Build macOS Intel
+        run: |
+          pyinstaller --onefile --console --name html_to_xlsx_macos_intel html_to_xlsx.py
+      
+      - name: Upload macOS Intel artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: html_to_xlsx-macos-intel
+          path: dist/html_to_xlsx_macos_intel
+
+  build-macos-arm:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install beautifulsoup4 openpyxl pyinstaller
+      
+      - name: Build macOS ARM
+        run: |
+          pyinstaller --onefile --console --name html_to_xlsx_macos_arm html_to_xlsx.py
+      
+      - name: Upload macOS ARM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: html_to_xlsx-macos-arm
+          path: dist/html_to_xlsx_macos_arm
