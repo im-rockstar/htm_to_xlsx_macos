@@ -21,7 +21,7 @@ jobs:
       
       - name: Build Windows EXE
         run: |
-          pyinstaller --onefile --console --name html_to_xlsx_windows html_to_xlsx.py
+          pyinstaller --onefile --console --name html_to_xlsx_windows html_to_xlsx_v2.py
       
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
@@ -48,7 +48,7 @@ jobs:
         env:
           ARCHFLAGS: "-arch x86_64"
         run: |
-          pyinstaller --onefile --console --name html_to_xlsx_macos_intel --target-arch x86_64 html_to_xlsx.py
+          pyinstaller --onefile --console --name html_to_xlsx_macos_intel --target-arch x86_64 html_to_xlsx_v2.py
       
       - name: Upload macOS Intel artifact
         uses: actions/upload-artifact@v4
@@ -73,7 +73,7 @@ jobs:
       
       - name: Build macOS ARM
         run: |
-          pyinstaller --onefile --console --name html_to_xlsx_macos_arm html_to_xlsx.py
+          pyinstaller --onefile --console --name html_to_xlsx_macos_arm html_to_xlsx_v2.py
       
       - name: Upload macOS ARM artifact
         uses: actions/upload-artifact@v4
