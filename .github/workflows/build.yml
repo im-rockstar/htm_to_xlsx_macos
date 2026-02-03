@@ -30,7 +30,7 @@ jobs:
           path: dist/html_to_xlsx_windows.exe
 
   build-macos-intel:
-    runs-on: macos-13
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       
@@ -45,8 +45,10 @@ jobs:
           pip install beautifulsoup4 openpyxl pyinstaller
       
       - name: Build macOS Intel
+        env:
+          ARCHFLAGS: "-arch x86_64"
         run: |
-          pyinstaller --onefile --console --name html_to_xlsx_macos_intel html_to_xlsx.py
+          pyinstaller --onefile --console --name html_to_xlsx_macos_intel --target-arch x86_64 html_to_xlsx.py
       
       - name: Upload macOS Intel artifact
         uses: actions/upload-artifact@v4
@@ -55,7 +57,7 @@ jobs:
           path: dist/html_to_xlsx_macos_intel
 
   build-macos-arm:
-    runs-on: macos-14
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       
