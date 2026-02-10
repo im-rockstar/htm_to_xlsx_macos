@@ -1,8 +1,6 @@
 name: Build Executables
-
 on:
   workflow_dispatch:
-
 jobs:
   build-windows:
     runs-on: windows-latest
@@ -44,39 +42,37 @@ jobs:
           python -m pip install --upgrade pip
           pip install beautifulsoup4 openpyxl pyinstaller
       
-      - name: Build macOS Intel
+      - name: Build macOS Intel app bundle
         env:
           ARCHFLAGS: "-arch x86_64"
         run: |
-          pyinstaller --onefile --console --name html_to_xlsx_macos_intel --target-arch x86_64 html_to_xlsx_v2.py
+          pyinstaller --windowed --name "html_to_xlsx" \
+            --osx-bundle-identifier "com.htmltoxlsx.app" \
+            --target-arch x86_64 \
+            html_to_xlsx_v2.py
+      
+      - name: Add drag and drop support to Info.plist
+        run: |
+          python3 -c "
+          import plistlib
+          plist_path = 'dist/html_to_xlsx.app/Contents/Info.plist'
+          with open(plist_path, 'rb') as f:
+              plist = plistlib.load(f)
+          plist['CFBundleDocumentTypes'] = [{
+              'CFBundleTypeName': 'HTML Document',
+              'CFBundleTypeExtensions': ['html', 'htm'],
+              'CFBundleTypeRole': 'Viewer'
+          }]
+          with open(plist_path, 'wb') as f:
+              plistlib.dump(plist, f)
+          "
+      
+      - name: Package app
+        run: |
+          cd dist && ditto -c -k --keepParent html_to_xlsx.app html_to_xlsx_macos_intel.zip
       
       - name: Upload macOS Intel artifact
         uses: actions/upload-artifact@v4
         with:
           name: html_to_xlsx-macos-intel
-          path: dist/html_to_xlsx_macos_intel
-
-  build-macos-arm:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install beautifulsoup4 openpyxl pyinstaller
-      
-      - name: Build macOS ARM
-        run: |
-          pyinstaller --onefile --console --name html_to_xlsx_macos_arm html_to_xlsx_v2.py
-      
-      - name: Upload macOS ARM artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: html_to_xlsx-macos-arm
-          path: dist/html_to_xlsx_macos_arm
+          path: dist/html_to_xlsx_macos_intel.zip
