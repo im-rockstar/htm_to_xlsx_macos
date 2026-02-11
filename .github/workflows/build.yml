@@ -40,7 +40,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install beautifulsoup4 openpyxl pyinstaller
+          pip install beautifulsoup4 openpyxl pyinstaller pyobjc-core pyobjc-framework-Cocoa
       
       - name: Build macOS Intel app bundle
         env:
